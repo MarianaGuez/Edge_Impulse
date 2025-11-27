@@ -1,4 +1,4 @@
-#MADI PROJECT: Local Education with Emotion Recognition
+# MADI PROJECT: Local Education with Emotion Recognition
 ## A learning assistant device designed so that the student can ask questions with their voices and receive simple explanations in real time. 
 Among its main features are:
 * It works without an internet connection.
