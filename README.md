@@ -86,7 +86,7 @@ The assistant runs entirely on the Jetson Orin Nano Super and includes:
 
 ## Quick Start 
 These steps assume installation is complete.
-Full setup is documented in docs/installation_guide.md.
+Full setup is documented in docs/installation_guide_jetson.md.
 
 ### 1. Start the Local LLM Server (Gemma-2)
 
