@@ -21,11 +21,12 @@ The database utilized for training the speech emotion recognition model, is [CRE
 ## Edge Impulse Steps
 
 1. First, create your project and name it.
-![1_a](https://github.com/user-attachments/assets/fab6a762-9ead-45da-8c09-ef6b6e25f8e7)![1_a](https://github.com/user-attachments/assets/ad4bfaab-f5eb-4235-bfdf-fa1f8a0558ef)
+
+![1_a](https://github.com/user-attachments/assets/fab6a762-9ead-45da-8c09-ef6b6e25f8e7)
 
 2. Select your Arduino BLE 33 in the target device
    
-<img width="3098" height="1164" alt="1_b" src="https://github.com/user-attachments/assets/2bd55bec-579f-4729-8bf5-4ea9a906d691" alt="Wiring"/><br><br>
+![1_b](https://github.com/user-attachments/assets/175e2e92-8468-4754-a08f-2846f3bfa369)
 
 3.Upload 1024 excerpts from the “Angry” class of the CREMA-D database (selecting the first 1024 only) and label them as “Negative”, then upload the 1024 excerpts from the “Neutral” class and label them as “Neutral” to ensure a balanced dataset.
 
