@@ -21,17 +21,23 @@ The database utilized for training the speech emotion recognition model, is [CRE
 ## Edge Impulse Steps
 
 1. First, create your project and name it.
+<br>
 
 ![1_a](https://github.com/user-attachments/assets/fab6a762-9ead-45da-8c09-ef6b6e25f8e7)
 
+<br><br>
 2. Select your Arduino BLE 33 in the target device
-   
+<br>   
+
 ![1_b](https://github.com/user-attachments/assets/175e2e92-8468-4754-a08f-2846f3bfa369)
 
+<br><br>
 3.Upload 1024 excerpts from the “Angry” class of the CREMA-D database (selecting the first 1024 only) and label them as “Negative”, then upload the 1024 excerpts from the “Neutral” class and label them as “Neutral” to ensure a balanced dataset.
+<br>
 
 ![2_a](https://github.com/user-attachments/assets/72a6a294-0bab-42d5-86ef-ad17519b88b9)
 
+<br><br>
 **Create Impulse**
 
 4. Steps:
@@ -40,13 +46,17 @@ The database utilized for training the speech emotion recognition model, is [CRE
  - Enabled zero-padding to add zeros when the audio is shorter than the window size.
  - Click on “Add a processing block” and select MFE. The difference between MFCC and MFE is that MFCC emphasizes vocal-tract resonances that shape phonemes (better for word recognition), while MFE better captures energy and   paralinguistic cues important for emotion recognition.
  - Click on “Add a learning block”, select Classification. This model will allow us to differentiate between the “Neutral” and “Negative” classes.
-   
+<br>
+
 ![3_a](https://github.com/user-attachments/assets/518befa7-bfb4-4f7f-bbb7-0ac427d58e49)
 
+<br><br>
 5. Check the MFE box to use them as input features and click on the "Save Impulse" button.
-   
+<br>
+
 ![3_b](https://github.com/user-attachments/assets/870bd8be-11e5-464a-a42c-48beef1ee139)
 
+<br><br>
 **MFE**
 
 6. The platform will enable two new sections. Move to “MFE” and set the following parameters:
@@ -58,26 +68,35 @@ The database utilized for training the speech emotion recognition model, is [CRE
    - Set the FFT size to 512 to match the frame length and the number of samples used in the FFT.
 
    - Since our sampling rate is 16 kHz, the maximum frequency analyzed will be 8 kHz, in accordance with the Nyquist theorem. This range is appropriate because emotion recognition requires more information than phoneme recognition, typically within the 400–4000 Hz range.
+<br>
 
 ![4_a](https://github.com/user-attachments/assets/4926d9a8-39be-4e3d-a4f2-40b1849900b8)
 
+<br><br>
 7. Once the parameters are saved, click on “Generate Features” and then click on the "Generate Features" button.
 When the process finishes, you can view the Feature Explorer.
 This is a two-dimensional mapping of the extracted features. Here, you can observe how separable your classes are, as well as the time required to generate the representation—in this case, 475 ms.
+<br>
 
 ![4_b](https://github.com/user-attachments/assets/33b00006-b3fb-4bdf-8c3a-ab38742cf527)
 
+<br><br>
 **Classifier**
 
 8. Move to “Classifier.”
 Make sure to tick the Data augmentation checkbox. This will help your model generalize better to unseen data.
 Click on the “Save & Train” button and wait for the training to finish.
+<br>
 
 ![5_a](https://github.com/user-attachments/assets/104823d8-7e83-4f53-ad07-8c2b6eb062a6)
 
+<br><br>
 Once the training finishes, important information about the model will appear, such as the accuracy, loss, inference time, and RAM and flash usage.
+<br>
+
 ![5_b](https://github.com/user-attachments/assets/5225d808-4a81-437a-960e-d0688366822a)
 
+<br><br>
 **Live Classification**
 
 9. For trying online your model:
@@ -85,35 +104,48 @@ Once the training finishes, important information about the model will appear, s
    - Click on the "Connect a development board" button
    - Click on "Connect to your computer"
    This will redirect you to a new tab.
+<br>
 
 ![6_a](https://github.com/user-attachments/assets/e4530efd-6736-4489-b394-c92aed21e3f2)
 
+<br><br>
 10. Give access to the microphone
+<br>
 
 ![6_b](https://github.com/user-attachments/assets/0a26507b-a3d9-41ca-9e5c-a2a2f369d695) 
 
+<br><br>
 11. Once in Data collection
     - Select the audio length
     - Select "Testing" for the split category
     - Click on "Start recording"
-      
+<br>
+
 ![6_c](https://github.com/user-attachments/assets/0c5bf2d6-cbbd-4812-ab3b-ba63224c8608)
 
+<br><br>
 12. Return to the original tab. The results of each frame will be displayed.
+<br>
 
 ![6_d](https://github.com/user-attachments/assets/5492fde7-8b19-4b30-aea6-9eb2be7f89d3)
 
+<br><br>
 **Deployment**
 13. Move to Deployment section
 - Search the deployment option: Arduino Library
 - Click on "Build"
+<br>
 
 ![7_a](https://github.com/user-attachments/assets/f7e67772-4b44-4994-a862-1c80a2e06b89)
 
+<br><br>
+
 This will automatically download the library, and the next instructions will be displayed.
+<br>
 
 ![7_b](https://github.com/user-attachments/assets/c0d8f757-c5b3-4f03-b4fe-0e3cd54fef2c)
 
+<br><br>
 
 Congratulations you have made your own Speech Emotion Recognition dectector! 
 
