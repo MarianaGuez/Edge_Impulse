@@ -31,6 +31,10 @@ The Arduino/TinyML part is documented separately.
 - Python 3.8+
 - Git, CMake, build tools
 
+The paths in this tutorial use /home/orin/ as the directory, where orin is the device name. You must replace orin with your actual device name or username. For example:
+If your device name is jetson_user, update the directory as:
+
+- /home/jetson_user/piper/build/pi/share/espeak
 ---
 
 # 2. Update System
@@ -57,19 +61,14 @@ sudo apt install -y \
 
 ---
 
-# 4. Create Project Directory
+# 4. Clone the main Project Directory
 
 ```bash
-mkdir -p ~/orin_nano_assistant
-cd ~/orin_nano_assistant
-mkdir -p assets logs
+git clone --branch modified https://github.com/ZGMFX20AR/orin_nano_assistant.git
+cd orin_nano_assistant
+chmod +x install_dependencies.sh
+./install_dependencies.sh
 ```
-
-Copy into assets:
-
-- bip.wav
-- bip2.wav
-
 ---
 
 # 5. Install Piper (Local Text-to-Speech)
@@ -85,7 +84,15 @@ cmake ..
 make -j$(nproc)
 ```
 
-## 5.2 Install voice models
+## 5.2 Move necessary files
+
+```bash
+sudo mv /home/orin/piper/build/pi/share/espeak-ng-data /usr/share/
+sudo mkdir -p /usr/local/share/piper/models
+sudo mv ~/orin_nano_assistant/assets/en_US-lessac-medium.onnx ~/orin_nano_assistant/assets/en_US-lessac-medium.onnx.json /usr/local/share/piper/models/
+```
+
+## 5.3 Install voice models
 
 ```bash
 sudo mkdir -p /usr/local/share/piper/models
@@ -124,10 +131,10 @@ cd llama.cpp
 mkdir build && cd build
 ```
 
-## 6.2 Build with CUDA
+## 6.2 Build with CPU only
 
 ```bash
-cmake .. -DGGML_CUDA=ON
+cmake .. -DGGML_CUDA=OFF
 make -j$(nproc)
 ```
 
@@ -145,11 +152,12 @@ wget -O gemma-2-2b-it-Q4_K_S.gguf \
 ## 6.4 Test
 
 ```bash
-cd ~/llama.cpp/build
+cd ~/llama.cpp/build-cpu
 ./bin/llama-cli \
   -m ../models/gemma-2-2b-it-Q4_K_S.gguf \
-  -p "Testing Gemma 2" \
-  -n 64 -ngl 999
+  -p "Testing Gemma 2 on CPU" \
+  -n 64 \
+  -ngl 0
 ```
 
 ---
@@ -163,13 +171,17 @@ cd ~/llama.cpp/build
 
 ./bin/llama-server \
   -m ../models/gemma-2-2b-it-Q4_K_S.gguf \
-  -p 8090 \
-  -t 4 \
+  --host 0.0.0.0 \
+  --port 8080 \
   -c 2048 \
-  -ngl 999
+  -b 16 \
+  -t 6 \
+  -ngl 0 \
+  --no-warmup
 ```
 
 Keep this running.
+<img width="1667" height="900" alt="image" src="https://github.com/user-attachments/assets/23c3564d-9982-4267-a4ad-b2920f2f784b" />
 
 ---
 
@@ -203,6 +215,75 @@ pip install torch-<version>.whl
 
 ---
 
+
+## 10. Replace the default assistant.py with the customized version
+
+The original repository cloned in the previous steps includes its own `assistant.py`, located at:
+
+```
+~/orin_nano_assistant/assistant.py
+```
+
+This file must be replaced with the customized version provided in this project, which includes:
+
+- Whisper speech-to-text integration  
+- Piper local TTS pipeline  
+- Gemma-2 prompt construction  
+- Emotion fusion logic  
+- Serial JSON parsing  
+- Hardware push-to-talk control  
+
+Open any code editor and replace orin with your actual device name.
+
+<img width="769" height="732" alt="image" src="https://github.com/user-attachments/assets/d0e5f3ea-001b-4fbc-a4f1-0b1bf9f01a82" />
+
+
+### Steps:
+
+1. Delete or overwrite the existing file:
+```
+rm ~/orin_nano_assistant/assistant.py
+```
+
+2. Copy your custom `assistant.py` into this directory:
+```
+cp /path/to/your/assistant.py ~/orin_nano_assistant/
+```
+
+(Replace `/path/to/your/assistant.py` with the actual location.)
+
+3. Verify the file exists:
+```
+ls ~/orin_nano_assistant/assistant.py
+```
+
+If the file appears, the replacement was successful.
+
+---
+
+## Step 11: Run the Assistant
+
+With all components configured, you can now launch the assistant:
+
+```bash
+python3 assistant.py
+```
+
+If the script starts without errors, the system is fully operational.  
+You should see log messages indicating:
+
+- Whisper has initialized  
+- The serial connection to the Arduino is active  
+- The LLM server is responding  
+- The push-to-talk loop is waiting for input  
+
+This confirms that your emotion-aware educational assistant is running correctly on the Jetson Orin Nano.
+
+This marks the starting point for further experimentation.  
+The modular design of this system allows you to extend or modify any component—TinyML model, prompts, hardware interface, or LLM behavior—depending on your goals.
+
+---
+
 # 10. GPIO Button Setup
 
 Wiring:
@@ -216,6 +297,9 @@ Wiring:
 BUTTON_PIN = 15
 GPIO.setmode(GPIO.BOARD)
 ```
+
+<img width="528" height="1282" alt="image" src="https://github.com/user-attachments/assets/2a3b33aa-d979-4929-8b60-ef0c56fcd393" />
+
 
 ---
 
@@ -237,24 +321,6 @@ Arduino must output:
 
 ```json
 {"id":"audio","negative":0.10,"neutral":0.90}
-```
-
----
-
-# 12. Copy assistant.py Into Project Folder
-
-Place your final script in:
-
-```
-~/orin_nano_assistant/assistant.py
-```
-
-Edit inside:
-
-```
-PIPER_BIN = "/home/<user>/piper/build/piper"
-PIPER_MODEL_PATH = "/usr/local/share/piper/models/es_MX-ald-medium.onnx"
-LLM_URL = "http://127.0.0.1:8090/completion"
 ```
 
 ---
