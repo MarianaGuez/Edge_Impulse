@@ -10,6 +10,42 @@ Everything runs fully offline on:
 
 Enabling privacy-focused, low-latency deployment for classrooms and embedded environments.
 
+## High-Level System Architecture
+
+```
++---------------------------------------------------------------+
+|                       Input Question                          |
++---------------------------------------------------------------+
+
++---------------------------+        +---------------------------+
+| Arduino Nano BLE Sense   |        | Jetson Orin Nano Super     |
+| (Edge Impulse TinyML)    |        | (Local AI Pipeline)        |
++------------+--------------+        +-------------+-------------+
+             |                                        |
+             v                                        v
+     +----------------------+         +---------------------------+
+     | Emotion Recognition  |         |  Whisper STT              |
+     |(NEUTRAL / FRUSTRATED |         +------------+--------------+
+     +----------+-----------+                      |
+           JSON (serial)                           |
+                |                                  v
+                |                      +-----------------------+
+                |--------------------->|Adaptive System Prompt |
+                                       +-----------+-----------+
+                                                   |
+                                                   v
+                                       +------------------------+
+                                       | Gemma-2 LLM (LLM server)|
+                                       +-----------+------------+
+                                                   |
+                                                   v
+                                       +------------------------+
+                                       | Piper TTS              |
+                                       +-----------+------------+
+                                                   |
+                                                   v
+                                            Speaker Output
+```
 
 ## TinyML in the Project
 **The emotional intelligence layer of this assistant depends entirely on Edge Impulse, and it is the foundation of how the system behaves.**
@@ -59,44 +95,7 @@ All inference is offline, private, and fast.
 
 **Emotion determines how the assistant teaches.**
 
-# 1. High-Level System Architecture
-
-```
-+---------------------------------------------------------------+
-|                       Input Question                          |
-+---------------------------------------------------------------+
-
-+---------------------------+        +---------------------------+
-| Arduino Nano BLE Sense   |        | Jetson Orin Nano Super     |
-| (Edge Impulse TinyML)    |        | (Local AI Pipeline)        |
-+------------+--------------+        +-------------+-------------+
-             |                                        |
-             v                                        v
-     +----------------------+         +---------------------------+
-     | Emotion Recognition  |         |  Whisper STT              |
-     |(NEUTRAL / FRUSTRATED |         +------------+--------------+
-     +----------+-----------+                      |
-           JSON (serial)                           |
-                |                                  v
-                |                      +-----------------------+
-                |--------------------->|Adaptive System Prompt |
-                                       +-----------+-----------+
-                                                   |
-                                                   v
-                                       +------------------------+
-                                       | Gemma-2 LLM (LLM server)|
-                                       +-----------+------------+
-                                                   |
-                                                   v
-                                       +------------------------+
-                                       | Piper TTS              |
-                                       +-----------+------------+
-                                                   |
-                                                   v
-                                            Speaker Output
-```
-
-# 2. Installation
+## Installation
 
 Refer to the documentation:
 - [Jetson setup](docs/installation_guide_jetson.md)
@@ -104,7 +103,7 @@ Refer to the documentation:
 - [Arduino/Edge Impulse setup](docs/installation_guide_arduino.md)
   
 
-# 3. Repository Structure
+## Repository Structure
 
 ```
 /
@@ -119,7 +118,7 @@ Refer to the documentation:
 
 ```
 
-# 6. Quick Start 
+## Quick Start 
 
 ### 1. Start LLM server:
 ```bash
@@ -149,7 +148,7 @@ python3 assistant.py
 - Piper speaks the output  
 
 
-# 10. [Configuration](./assistant.py)
+## Configuration (./assistant.py)
 
 ```
 USE_IMAGE_EMOTION = False
@@ -163,11 +162,11 @@ PIPER_MODEL_PATH = "/usr/local/share/piper/models/es_MX-ald-medium.onnx"
 
 
 
-# 11. Authors
+## Authors
 
 Didier & Mariana – 2025  
 Embedded AI • TinyML • Edge LLM Engineering
 
-# 12. License
+## License
 
 This project is provided for educational and research use as part of the Edge Impulse Hackathon.
