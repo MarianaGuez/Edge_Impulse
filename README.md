@@ -64,13 +64,13 @@ Emotion detection is the core innovation of this project and the main driver of 
 
     Emotion directly influences how the assistant teaches.
 
----
+
 
 ## **Local Whisper Transcription — Voice to Text Offline**
 
 When the user presses the button and speaks, Whisper (running fully offline) transcribes the audio and sends clean text to the LLM.
 
----
+
 
 ## **Local LLM (Gemma 2B / Llama.cpp) — Context-Aware Response Generation**
 
@@ -80,11 +80,13 @@ The LLM uses both:
 
 to generate a fully local, privacy-preserving, and emotionally aligned answer.
 
----
+
 
 ## **Audio Output — The Assistant Speaks Back**
 
 The final response is spoken using a local TTS system through a USB or Bluetooth speaker.
+
+---
 
 
 ## Installation
@@ -110,6 +112,59 @@ Refer to the documentation:
     └── SpeechEmotionRecognition.ino
 
 ```
+
+## Quick Start 
+
+### 1. Start LLM server:
+```bash
+cd ~/llama.cpp/build
+./bin/llama-server \
+  -m ../models/gemma-2-2b-it-Q4_K_S.gguf \
+  -p 8090 -t 4 -c 2048 -ngl 999
+```
+
+### 2. Activate Python environment:
+```bash
+cd ~/orin_nano_assistant
+source venv/bin/activate
+```
+
+### 3. Run assistant:
+```bash
+python3 assistant.py
+```
+
+### 4. Usage:
+- Press and hold button → speak  
+- Release → Whisper transcribes  
+- Edge Impulse model provides emotion  
+- Jetson receives the emotion  
+- LLM responds adapting the tone  
+- Piper speaks the output  
+
+
+## Configuration (./assistant.py)
+
+```
+USE_IMAGE_EMOTION = False
+USE_GUI_MODE = True
+LANGUAGE = "es"
+BUTTON_PIN = 15
+AUDIO_SERIAL_PORT = "/dev/ttyACM0"
+LLM_URL = "http://127.0.0.1:8090/completion"
+PIPER_MODEL_PATH = "/usr/local/share/piper/models/es_MX-ald-medium.onnx"
+```
+
+
+
+## Authors
+
+Didier & Mariana – 2025  
+Embedded AI • TinyML • Edge LLM Engineering
+
+## License
+
+This project is provided for educational and research use as part of the Edge Impulse Hackathon.
 
 
 
